@@ -3,7 +3,12 @@ import { splitKeypath } from './keypaths';
 import { isObject } from '../utils/is';
 import { warnIfDebug } from '../utils/log';
 
-export function set ( ractive, pairs ) {
+export let keep = false;
+
+export function set ( ractive, pairs, options ) {
+	const k = keep;
+	if ( options && options.keep ) keep = options.keep;
+
 	const promise = runloop.start( ractive, true );
 
 	let i = pairs.length;
@@ -21,6 +26,8 @@ export function set ( ractive, pairs ) {
 	}
 
 	runloop.end();
+
+	keep = k;
 
 	return promise;
 }
